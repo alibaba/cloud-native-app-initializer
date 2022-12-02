@@ -1,0 +1,55 @@
+server:
+  port: 7001
+  compression:
+    enabled: true
+    mime-types: application/json,text/css,text/html
+    min-response-size: 2048
+  error:
+    whitelabel:
+      enabled: false
+  forward-headers-strategy: native
+
+management:
+  server:
+    port: 7002
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+spring:
+  application:
+    name: "initializr"
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  mustache:
+    check-template-location: false
+  resources:
+    static_locations:
+      - "classpath:/static/"
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+  security:
+    csrf:
+      enabled: true
+      url:
+        excluded: "/**/git-upload-pack,/**/info/refs"
+
+logging:
+  level:
+    org.springframework.core.env: warn
+    org.springframework.jndi: warn
+
+application:
+  metadata-path: classpath:metadata.yaml
+  democode-path: classpath:/templates/codes
+  cache:
+    repo:
+      expTime:
+        local: 30
+        oss: 120
+        holder: 300
+      interval:
+        checkoss: 30

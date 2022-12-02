@@ -1,0 +1,33 @@
+@import 'variables';
+@import 'mixins';
+
+.modal-fetch {
+    padding: 10px 30px 10px 30px;
+    height: 300px;
+    width: 700px;
+    h2 {
+      border-bottom: solid 3px #ff6a00;
+      padding-bottom: 10px;
+    }
+    .fetch-method {
+        margin-bottom: 20px;
+        span {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+        input {
+            padding-right: 70px;
+            display: inline-block;
+        }
+        a {
+            width: 60px;
+            position: absolute;
+            right: 20px;
+            color: #ff6a00;
+        }
+        a:visited {
+            color: #ff6a00;
+        }
+    }
+}

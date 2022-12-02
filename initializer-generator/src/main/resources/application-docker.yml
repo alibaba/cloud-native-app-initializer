@@ -1,0 +1,11 @@
+application:
+  cache:
+    repo:
+      expTime:
+        local: 30
+        oss: 120
+        holder: 600
+      interval:
+        checkoss: 20
+  metadata-path: ${METADATA_PATH}
+  democode-path: ${DEMOCODE_PATH}

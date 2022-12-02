@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- https://github.com/spring-projects/spring-boot/blob/v1.5.13.RELEASE/spring-boot/src/main/resources/org/springframework/boot/logging/logback/defaults.xml -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property name="APP_NAME" value="initializer"/>
+    <property name="LOG_PATH" value="${user.home}/${APP_NAME}/logs"/>
+    <property name="APP_LOG_FILE" value="${LOG_PATH}/application.log"/>
+    <property name="COLLECT_LOG_FILE" value="${LOG_PATH}/collect.log"/>
+
+    <!-- appenders -->
+    <appender name="APPLICATION"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${APP_LOG_FILE}</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${APP_LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <maxFileSize>50MB</maxFileSize>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="ConfigCollecterAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${COLLECT_LOG_FILE}</file>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${COLLECT_LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <maxFileSize>50MB</maxFileSize>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%clr(%d{HH:mm:ss}) %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(--){faint} %clr([%25.25t]){faint} %clr(%-50.50logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- loggers -->
+    <logger name="ConfigCollecter" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="ConfigCollecterAppender"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="APPLICATION"/>
+    </root>
+</configuration>

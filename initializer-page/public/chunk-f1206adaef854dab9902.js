@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[9],{237:function(e,n,o){"use strict";o.r(n);var r=o(1),a=o.n(r),t=o(0),c=o.n(t),p=o(233);function u(e){var n=e.onSubmit,o=e.onExplore;return c.a.createElement(p.GlobalHotKeys,{keyMap:{SUBMIT:["command+enter","ctrl+enter"],EXPLORE:["ctrl+space"]},handlers:{SUBMIT:n,EXPLORE:o},global:!0})}u.propTypes={onSubmit:a.a.func.isRequired,onExplore:a.a.func.isRequired},n.default=u}}]);
+//# sourceMappingURL=chunk-f1206adaef854dab9902.js.map

@@ -1,0 +1,59 @@
+/*
+ * Copyright 2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.alibaba.initializer.core.constants;
+
+import lombok.Getter;
+
+/**
+ * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
+ */
+@Getter
+public enum ErrorCodeEnum {
+
+    /**
+     * 无效参数
+     */
+    ILLEGAL_ARGUMENT("illegal argument"),
+
+    /**
+     * 系统内部异常，未知异常
+     */
+    SYSTEM_ERROR("sys error"),
+
+    /**
+     * 不支持的功能
+     */
+    UNSUPPORTED("un support"),
+
+    /**
+     * 没有登录态
+     */
+    NO_LOGIN("not login");
+
+    /**
+     * 发生在api调用时，返回的状态码
+     */
+    private final String httpCode;
+
+    ErrorCodeEnum(String httpCode) {
+        this.httpCode = httpCode;
+    }
+
+    public String getError() {
+        return this.name() + "(" + this.httpCode + ")";
+    }
+}
