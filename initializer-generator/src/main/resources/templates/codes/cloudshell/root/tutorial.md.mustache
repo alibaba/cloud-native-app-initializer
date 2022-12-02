@@ -1,0 +1,43 @@
+# 沙箱环境使用说明
+
+## 环境介绍
+该环境是一套独立的运行容器。只需要通过浏览器即可与容器交互。
+本环境提供命令行、文件浏览器两种交互方式，你可以选择你习惯的使用方式。
+通过这些工具，您可以在查看、修改、编译、运行您的 java 代码。
+
+
+**一些限制：**
+* 本环境只有1小时的使用时间，到期环境自动释放；
+* 由于环境本身服务需要使用一些端口，所以请注意避免端口冲突，尤其是：80、8080、8090
+* 修改端口的配置，一般都在 application.properties 文件中，请根据自己选择的组件修改对应配置项
+* 本环境已经内置了很多主流语言包括：Java、Go、Python、Nodejs、PHP、Ruby；以及很多主要的工具环境，包括：git、maven。<br>
+但是如果还需要其他环境则需要自行安装
+* 其他限制，请参考[说明文档](https://help.aliyun.com/document_detail/184941.html)
+
+## 代码编译
+如果您使用 maven 构建，请使用如下命令打包：
+```bash
+mvn clean package
+```
+> tips: 如果环境在申请后第一次进行编译，由于需要下载基础依赖库，可能花费1~2分钟时间，清注意控制台的输出
+
+## 运行程序
+进入 maven 打包输出目录
+```bash
+{{#targetModule}}
+cd {{targetModule}}/target
+{{/targetModule}}
+{{^targetModule}}
+cd target
+{{/targetModule}}
+```
+
+使用 java 命令启动程序
+```bash
+{{#targetModule}}
+java -jar {{targetModule}}-{{version}}.jar
+{{/targetModule}}
+{{^targetModule}}
+java -jar {{artifactId}}-{{version}}.jar
+{{/targetModule}}
+```

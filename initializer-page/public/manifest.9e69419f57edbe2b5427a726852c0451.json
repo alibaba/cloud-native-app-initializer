@@ -1,0 +1,51 @@
+{
+  "icons": [
+    {
+      "src": "/icon_512x512.36bb143b826519027b1d44cc4b8aea58.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_384x384.4ff9dc7b0d91aecd94da470bc8ef6419.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_256x256.42a05c99b3309698628af1b7592ae8c7.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_192x192.c6e0f62a4607bdda5252312f760f9bd6.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_144x144.2478b24a321b48218de36189e71828e5.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_96x96.257cfac9ff415c6435de6c05c4dc2317.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_72x72.8685ae081c06d3406b994d368ff6bc1b.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_48x48.7cca9ef053ee5d21b555074ae8bf4128.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    }
+  ],
+  "name": "alibaba-initializr",
+  "short_name": "Start",
+  "orientation": "portrait",
+  "display": "standalone",
+  "start_url": "/",
+  "description": "Initializr generates spring boot project with just what you need to start quickly!",
+  "background_color": "#6db33f"
+}

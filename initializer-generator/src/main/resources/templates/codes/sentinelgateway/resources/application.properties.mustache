@@ -1,0 +1,8 @@
+spring.cloud.gateway.routes[0].id=foo-service-route
+spring.cloud.gateway.routes[0].uri=http://localhost:9669/
+spring.cloud.gateway.routes[0].predicates[0]=Path=/demo/**
+spring.cloud.gateway.routes[1].id=httpbin-route
+spring.cloud.gateway.routes[1].uri=https://httpbin.org
+spring.cloud.gateway.routes[1].predicates[0]=Path=/httpbin/**
+spring.cloud.gateway.routes[1].filters[0]=RewritePath=/httpbin/(?<segment>.*), /$\{segment}
+

@@ -1,0 +1,73 @@
+## 控制台: https://ons.console.aliyun.com
+## Spring Cloud Alibaba RocketMQ 文档：https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/rocketmq.adoc
+## RocketMQ 帮助文档：https://help.aliyun.com/product/29530.html
+
+########## RocketMQ 通用配置
+# 客户端接入点，必填
+spring.cloud.stream.rocketmq.binder.name-server=127.0.0.1:9876
+# 阿里云账号 AccessKey，默认为空；如果使用aliyun提供的rocketmq服务，该值必填
+spring.cloud.stream.rocketmq.binder.access-key=
+# 阿里云账号 SecretKey，默认为空；如果使用aliyun提供的rocketmq服务，该值必填
+spring.cloud.stream.rocketmq.binder.secret-key=
+# 日志级别
+logging.level.com.alibaba.cloud.stream.binder.rocketmq=INFO
+
+########## Consumer Config
+# input1 的配置：
+spring.cloud.stream.bindings.input1.destination=test-topic
+spring.cloud.stream.bindings.input1.content-type=text/plain
+spring.cloud.stream.bindings.input1.group=test-group1
+# Consumer 是否同步消费消息模式。默认为false
+spring.cloud.stream.rocketmq.bindings.input1.consumer.orderly=true
+# Consumer 基于 TAGS 订阅，多个 tag 以 || 分割。默认值: empty（即空字符串""）
+spring.cloud.stream.rocketmq.bindings.input1.consumer.tags=tagStr
+# 异步消费消息模式下消费失败重试策略，默认值: 0
+# -1 = 不重复，直接放入死信队列
+#  0 = broker 控制重试策略
+# >0 = client 控制重试策略
+spring.cloud.stream.rocketmq.bindings.input1.consumer.delayLevelWhenNextConsume=0
+# 同步消费消息模式下消费失败后再次消费的时间间隔。默认值: 1000
+spring.cloud.stream.rocketmq.bindings.input1.consumer.suspendCurrentQueueTimeMillis=1000
+# 更多配置参数，可查看源码：com.alibaba.cloud.stream.binder.rocketmq.properties.RocketMQConsumerProperties
+# input2 的配置：
+spring.cloud.stream.bindings.input2.destination=test-topic
+spring.cloud.stream.bindings.input2.content-type=text/plain
+spring.cloud.stream.bindings.input2.group=test-group2
+spring.cloud.stream.bindings.input2.consumer.concurrency=20
+spring.cloud.stream.bindings.input2.consumer.maxAttempts=1
+spring.cloud.stream.rocketmq.bindings.input2.consumer.orderly=false
+spring.cloud.stream.rocketmq.bindings.input2.consumer.tags=tagStr
+# input3 的配置：
+spring.cloud.stream.bindings.input3.destination=test-topic
+spring.cloud.stream.bindings.input3.content-type=application/json
+spring.cloud.stream.bindings.input3.group=test-group3
+spring.cloud.stream.bindings.input3.consumer.concurrency=20
+spring.cloud.stream.rocketmq.bindings.input3.consumer.tags=tagObj
+# input4 的配置：
+spring.cloud.stream.bindings.input4.destination=TransactionTopic
+spring.cloud.stream.bindings.input4.content-type=text/plain
+spring.cloud.stream.bindings.input4.group=transaction-group
+spring.cloud.stream.bindings.input4.consumer.concurrency=5
+# input5 的配置：
+spring.cloud.stream.bindings.input5.destination=pull-topic
+spring.cloud.stream.bindings.input5.content-type=text/plain
+spring.cloud.stream.bindings.input5.group=pull-topic-group
+
+########## Produce Config
+# output1 的配置如下：
+spring.cloud.stream.bindings.output1.destination=test-topic
+spring.cloud.stream.bindings.output1.content-type=text/plain
+# Producer group name。默认值为empty（即""）
+spring.cloud.stream.rocketmq.bindings.output1.producer.group=my_group
+# 是否发送事务消息。默认值为false
+spring.cloud.stream.rocketmq.bindings.output1.producer.transactional=false
+# 是否使用同步得方式发送消息。默认值为false
+spring.cloud.stream.rocketmq.bindings.output1.producer.sync=true
+# 更多配置参数，可查看源码：com.alibaba.cloud.stream.binder.rocketmq.properties.RocketMQProducerProperties
+
+# output2 的配置如下：
+spring.cloud.stream.bindings.output2.destination=test-topic
+spring.cloud.stream.bindings.output2.content-type=application/json
+spring.cloud.stream.rocketmq.bindings.output2.producer.group=myTxProducerGroup
+spring.cloud.stream.rocketmq.bindings.output2.producer.transactional=true
+spring.cloud.stream.rocketmq.bindings.output2.producer.sync=false

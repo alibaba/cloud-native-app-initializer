@@ -1,0 +1,26 @@
+initializer-page/node/
+initializer-page/node_modules/
+initializer-page/analysis/
+initializer-page/target/
+
+initializer-generator/target/
+
+node_modules/
+.mvn/
+
+tree
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.DS_Store
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
