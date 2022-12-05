@@ -85,7 +85,7 @@ const config = {
       filename: 'bootstrap.html',
       title: 'Cloud Native App Initializer',
       description: `Initializr generates spring boot project with just what you need to start quickly!`,
-      url: 'https://github.com/alibaba/spring-cloud-alibaba',
+      url: 'https://github.com/alibaba/cloud-native-app-initializer',
       twitter: '@springboot',
       theme: `#6db33f`,
     }),
