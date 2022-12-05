@@ -1,7 +1,7 @@
 {
-  "name": "alibaba-initializr",
+  "name": "CloudNativeAppInitalizer",
   "private": true,
-  "description": "https://github.com/alibaba/spring-cloud-alibaba",
+  "description": "https://github.com/alibaba/cloud-native-app-initializer",
   "version": "0.0.2",
   "author": "Spring",
   "keywords": [
