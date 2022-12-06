@@ -82,6 +82,12 @@ export default function Application() {
     setBlob(project)
   }
 
+  const onShare = event => {
+    const { x, y } = get(event, 'target').getBoundingClientRect()
+    setPositionShare({ x, y })
+    dispatch({ type: 'SHARE_UPDATE', payload: { open: true } })
+  }
+
   const update = args => {
     dispatchInitializr({ type: 'UPDATE', payload: args })
   }
@@ -301,6 +307,9 @@ export default function Application() {
                 hotkey='Ctrl + Space'
               >
                 浏览代码
+              </Button>
+              <Button id='share-project' onClick={onShare}>
+                分享...
               </Button>
             </Footer>
           </>
