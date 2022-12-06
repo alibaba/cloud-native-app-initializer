@@ -73,17 +73,6 @@ function Popover({ shareUrl, shareSrc, open, onClose, position }) {
                   <label htmlFor='input-share'>
                     请复制下面的链接来分享你的项目配置；
                   </label>
-                  {
-                    shareSrc === ''
-                    ?
-                      <label htmlFor='input-share'>
-                        Tips: 您未登录，请<a href="https://account.aliyun.com/login/login.htm?oauth_callback=https%3A%2F%2Fstart.aliyun.com%2Fbootstrap.html">登录</a>后再分享链接，否则该分享链接的点击讲无法关联在您的账户下
-                      </label>
-                    :
-                      <label htmlFor='input-share'>
-                        Tips: 您已登录，您可以使用一下专属链接来分享项目配置，该分享链接的点击将被关联在您的账户下
-                      </label>
-                  }
                   <div className='control'>
                     <input
                       onFocus={event => {
