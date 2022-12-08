@@ -1,3 +1,6 @@
+[English](README.md) | [简体中文](README-zh.md)
+
+---
 # 云原生应用脚手架
 
 ## 文档

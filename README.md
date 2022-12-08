@@ -1,4 +1,9 @@
+[English](README.md) | [简体中文](README-zh.md)
+
+---
 # Cloud Native App Initializer
+
+[简体中文](README-zh.md)
 
 ## code structure
 This is a Cloud Native App Initializer project derived from Spring Initializr, which includes the following modules:
