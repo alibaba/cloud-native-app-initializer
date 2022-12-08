@@ -3,7 +3,7 @@
 ---
 # Cloud Native App Initializer
 
-## code structure
+## Code structure
 This is a Cloud Native App Initializer project derived from Spring Initializr, which includes the following modules:
 * initializer-generator: Generate Project Modules, part of the basic code of [start.spring.io](https://start.spring.io/) is referenced in the `io.spring.start.site` directory.
 * initializer-page: Front page
