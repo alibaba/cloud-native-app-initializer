@@ -1709,11 +1709,11 @@ initializr:
               href: https://github.com/GoogleCloudPlatform/spring-cloud-gcp/tree/main/spring-cloud-gcp-samples/spring-cloud-gcp-storage-resource-sample
     - name: Hidden Group
       id: hidden-group
-      hide: true
+#      hide: true
       description: this is a hidden dependency group
       content:
-        - name: hidden test 1
-          id: hidden-test-1
+        - name: cloudshell
+          id: cloudshell
   types:
     - name: Maven Project
       id: maven-project
