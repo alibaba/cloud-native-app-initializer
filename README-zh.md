@@ -4,7 +4,8 @@
 # 云原生应用脚手架
 
 ## 文档
-- [如何自定义内容](docs/howToCustom_zh.md)
+- [如何自定义内容](docs/howToCustom-zh.md)
+- [代码贡献](docs/CONTRIBUTING-zh.md)
 
 ## 代码结构
 这是一个源自于 Spring Initializr 构建的云原生应用脚手架项目，它包含以下模块：
