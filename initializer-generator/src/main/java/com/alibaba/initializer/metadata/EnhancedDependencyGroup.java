@@ -31,6 +31,10 @@ public class EnhancedDependencyGroup extends DependencyGroup {
 
     private List<EnhancedDependency> content;
 
+    /**
+     * wheather display on web page or idea plugin
+     * if true, this dependency group will hide from web page or idea plugin
+     */
     @JsonIgnore
     private boolean hidden = false;
 
