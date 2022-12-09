@@ -16,16 +16,18 @@
 
 package com.alibaba.initializer.metadata;
 
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.spring.initializr.metadata.Dependency;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ArchedDependency extends Dependency {
+public class EnhancedDependency extends Dependency {
+
+    private boolean hide = false;
 
     private Map<String, DependencyArchConfig> archCfg;
 
@@ -35,5 +37,13 @@ public class ArchedDependency extends Dependency {
 
     public void setArchCfg(Map<String, DependencyArchConfig> archCfg) {
         this.archCfg = archCfg;
+    }
+
+    public boolean isHide() {
+        return hide;
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
     }
 }

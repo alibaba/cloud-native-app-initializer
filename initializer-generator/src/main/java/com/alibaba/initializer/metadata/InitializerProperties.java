@@ -44,7 +44,7 @@ public class InitializerProperties extends InitializrConfiguration {
      * Dependencies, organized in groups (i.e. themes).
      */
     @JsonIgnore
-    private final List<InitializerDependencyGroup> dependencies = new ArrayList<>();
+    private final List<EnhancedDependencyGroup> dependencies = new ArrayList<>();
 
     /**
      * Available project types.
@@ -116,10 +116,9 @@ public class InitializerProperties extends InitializrConfiguration {
         return architecture;
     }
 
-    public List<InitializerDependencyGroup> getDependencies() {
+    public List<EnhancedDependencyGroup> getDependencies() {
         return dependencies;
     }
-
 
     public List<Type> getTypes() {
         return this.types;
