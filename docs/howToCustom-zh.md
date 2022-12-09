@@ -7,7 +7,7 @@
 
 脚手架的数据分为以下两个部分：
 
-- 元数据：一组以yaml格式维护的数据集，包含：springboot 版本、jdk 版本、可选依赖等等相关信息；
+- 元数据：一组以yaml格式维护的数据集，包含：Spring Boot 版本、Jdk 版本、可选依赖等等相关信息；
 - 代码模板：一系列使用 mustache 语法，按照组件维度维护的代码片段，在选择对应的组件时自动渲染这部分示例代码；
 
 ## 元数据
@@ -15,12 +15,12 @@
 
 如果需要修改这个配置的加载路径，可以通过更改参数 `application.metadata-path`的值来实现。例如，如果在本地有一个元数据配置文件，存放在 `/home/theonefx/meta.yaml`，则将这个值设置到`application.metadata-path`上即可。
 
-当然你也可以使用 spring boot 的 profile 以及配置加载机制来实现更多的配置方式。不过需要注意的是，设置了自定义配置文件以后，原有的元数据配置将不再生效；
+当然你也可以使用 Spring Boot 的 profile 以及配置加载机制来实现更多的配置方式。不过需要注意的是，设置了自定义配置文件以后，原有的元数据配置将不再生效；
 
 ### 元数据配置字段
 | 字段 key | 说明 |
 | --- | --- |
-| initializr.env.boms | 以 Bom 方式引入的依赖信息，关键维护了 bom 的坐标，以及跟 spring boot 版本的映射关系； |
+| initializr.env.boms | 以 Bom 方式引入的依赖信息，关键维护了 bom 的坐标，以及跟 Spring Boot 版本的映射关系； |
 | initializr.env.gradle | gradle的基本配置，默认即可 |
 | initializr.env.platform | 平台API的版本，默认即可 |
 | initializr.env.repositories | 依赖中，如果有需要单独声明的所在仓库信息，这里是对应的仓库列表 |
@@ -29,12 +29,12 @@
 | initializr.packagings | 指定最终的编译打包方式，jar 包或者是 war 包 |
 | initializr.javaVersions | java 的可选版本，以及默认值 | 
 | initializr.languages | 项目使用的语言：java 、kotlin、groovy | 
-| initializr.bootVersions | spring boot 的可选版本以及默认值 |
+| initializr.bootVersions | Spring Boot 的可选版本以及默认值 |
 | initializr.architecture | 架构的可选项，以及相关模块配置。默认的 none 单模块一定要有 详见下文 |
 
 
 ### 版本范围
-由于平台使用了 spring.initializr 作为底层框架，所以必须依赖于其提供的版本范围概念（该范围特指 spring boot 的版本）。这里可以直接访问 spring 的文档以确认版本范围的规范：
+由于平台使用了 spring.initializr 作为底层框架，所以必须依赖于其提供的版本范围概念（该范围特指 Spring Boot 的版本）。这里可以直接访问 Spring 的文档以确认版本范围的规范：
 [Spring 范围文档](https://docs.spring.io/initializr/docs/current-SNAPSHOT/reference/html/#dependencies-compatibility-range)
 ### 组件依赖配置
 ```yaml
@@ -61,14 +61,14 @@ dependencies:
 - 依赖分组
     - name： 分组名称；
     - bom：对应引入的 bom，可选，如果配置了 bom 则版本依赖全部由 bom 控制；
-    - compatibilityRange：版本范围，可选。如果配置该值代表支持的 spring boot 版本范围，如果不配置则不关注spring boot 版本；
+    - compatibilityRange：版本范围，可选。如果配置该值代表支持的 Spring Boot 版本范围，如果不配置则不关注Spring Boot 版本；
     - content：具体组件依赖
 - 组件依赖
     - name：依赖名称，展示用
     - id：依赖的唯一标识，需要全局唯一
     - description：依赖描述，展示用
     - groupId、artifactId：依赖坐标
-    - starter：是否是 spring boot 的 starter
+    - starter：是否是 Spring Boot 的 starter
     - links：用于生成 help 文档中放置的关联连接
 ### 架构配置
 ```yaml
@@ -138,7 +138,7 @@ architecture:
 | applicationName | 项目全名 | Application |
 | basePackage | 项目的base包路径 | com.theonef.testapp |
 | version | 项目版本 | 1.0 |
-| spring-boot.version | spring boot 版本 | 2.2.6.RELEASE |
+| spring-boot.version | Spring Boot 版本 | 2.2.6.RELEASE |
 | java.version | jdk 版本 | 1.8 |
 | artifactId | 项目坐标 | testapp |
 | groupId | 项目坐标 | com.theonef |
