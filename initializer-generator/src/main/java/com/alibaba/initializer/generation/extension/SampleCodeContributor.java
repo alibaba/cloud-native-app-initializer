@@ -38,7 +38,7 @@ import com.alibaba.initializer.core.template.CodeTemplateRepoRenderer;
 import com.alibaba.initializer.core.template.RepoRenderResult;
 import com.alibaba.initializer.core.template.loader.RootRepoTemplateLoader;
 import com.alibaba.initializer.generation.constants.BootstrapTemplateRenderConstants;
-import com.alibaba.initializer.metadata.ArchedDependency;
+import com.alibaba.initializer.metadata.EnhancedDependency;
 import com.alibaba.initializer.metadata.Architecture;
 import com.alibaba.initializer.metadata.DependencyArchConfig;
 import com.alibaba.initializer.metadata.InitializerMetadata;
@@ -113,7 +113,11 @@ public class SampleCodeContributor implements ProjectContributor {
             List<RepoRenderResult.TemplateRenderResult> resources = result.getResults("resources");
             resources.forEach(res -> writeResources(res, language, projectRoot, structure));
 
-            // TODO write root, how to separate root resource from code & resource ?
+            // write root
+            if (module.isRoot()) {
+                List<RepoRenderResult.TemplateRenderResult> roots = result.getResults("root");
+                roots.forEach(res -> writeRoot(res, language, projectRoot, structure));
+            }
         });
     }
 
@@ -148,7 +152,7 @@ public class SampleCodeContributor implements ProjectContributor {
     private boolean filterByModule(Map.Entry<String, Dependency> entry, Architecture arch) {
 
         String id = entry.getKey();
-        ArchedDependency dep = getMetaDependency(id);
+        EnhancedDependency dep = getMetaDependency(id);
 
         if (dep == null) {
             return true;
@@ -181,12 +185,12 @@ public class SampleCodeContributor implements ProjectContributor {
         }
     }
 
-    private ArchedDependency getMetaDependency(String id) {
+    private EnhancedDependency getMetaDependency(String id) {
 
         for (DependencyGroup group : meta.getDependencies().getContent()) {
             for (io.spring.initializr.metadata.Dependency dependency : group.getContent()) {
                 if (StringUtils.equalsIgnoreCase(dependency.getId(), id)) {
-                    return (ArchedDependency) dependency;
+                    return (EnhancedDependency) dependency;
                 }
             }
         }
@@ -212,6 +216,17 @@ public class SampleCodeContributor implements ProjectContributor {
 
         path = structure.getResourcesDirectory().resolve(path.subpath(1, path.getNameCount()));
 
+        try {
+            doWirte(path, content, true);
+        } catch (IOException e) {
+            throw new BizRuntimeException(ErrorCodeEnum.SYSTEM_ERROR, "write code error", e);
+        }
+    }
+
+    protected void writeRoot(RepoRenderResult.TemplateRenderResult result, Language language, Path projectRoot, SourceStructure structure) {
+        Path path = projectRoot.resolve(result.getPath().subpath(1, result.getPath().getNameCount()));
+
+        String content = result.getContent();
         try {
             doWirte(path, content, true);
         } catch (IOException e) {
