@@ -13,7 +13,7 @@
 ## 元数据
 默认的版本中自带了一套默认的元数据配置，存放在 `initializer-generator/src/main/resources/metadata.yaml`下。
 
-如果需要修改这个配置的加载路径，可以通过更改参数 `application.metadata-path`的值来实现。例如，如果在本地有一个元数据配置文件，存放在 `/home/theonefx/meta.yaml`，则将这个值设置到到`application.metadata-path`上即可。
+如果需要修改这个配置的加载路径，可以通过更改参数 `application.metadata-path`的值来实现。例如，如果在本地有一个元数据配置文件，存放在 `/home/theonefx/meta.yaml`，则将这个值设置到`application.metadata-path`上即可。
 
 当然你也可以使用 spring boot 的 profile 以及配置加载机制来实现更多的配置方式。不过需要注意的是，设置了自定义配置文件以后，原有的元数据配置将不再生效；
 
@@ -35,7 +35,7 @@
 
 ### 版本范围
 由于平台使用了 spring.initializr 作为底层框架，所以必须依赖于其提供的版本范围概念（该范围特指 spring boot 的版本）。这里可以直接访问 spring 的文档以确认版本范围的规范：
-[https://docs.spring.io/initializr/docs/current-SNAPSHOT/reference/html/#dependencies-compatibility-range](https://docs.spring.io/initializr/docs/current-SNAPSHOT/reference/html/#dependencies-compatibility-range)
+[Spring 范围文档](https://docs.spring.io/initializr/docs/current-SNAPSHOT/reference/html/#dependencies-compatibility-range)
 ### 组件依赖配置
 ```yaml
 dependencies:
