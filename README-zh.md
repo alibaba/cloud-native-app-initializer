@@ -1,4 +1,13 @@
+[English](README.md) | [简体中文](README-zh.md)
+
+---
 # 云原生应用脚手架
+
+## 文档
+- [如何自定义内容](docs/howToCustom-zh.md)
+- [代码贡献](docs/CONTRIBUTING-zh.md)
+
+## 代码结构
 这是一个源自于 Spring Initializr 构建的云原生应用脚手架项目，它包含以下模块：
 * initializer-generator: 脚手架生成项目模块，在其中`io.spring.start.site`目录下引用了部分 [start.spring.io](https://start.spring.io/) 的基础代码。
 * initializer-page: 脚手架前端页面
