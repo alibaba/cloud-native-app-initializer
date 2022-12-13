@@ -81,16 +81,9 @@ public class ArchedMavenProjectGenerationConfiguration {
     }
 
     @Bean
-    @ConditionalOnArchitectured
     public MulitModuleMavenBuildProjectContributor mulitModuleavenBuildProjectContributor(
-            MavenBuild build, IndentingWriterFactory indentingWriterFactory) {
-        return new MulitModuleMavenBuildProjectContributor(build, indentingWriterFactory);
+            MavenBuild build, IndentingWriterFactory indentingWriterFactory,InitializrMetadata metadata) {
+        return new MulitModuleMavenBuildProjectContributor(build, indentingWriterFactory, metadata);
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public MavenBuildProjectContributor mavenBuildProjectContributor(
-            MavenBuild build, IndentingWriterFactory indentingWriterFactory) {
-        return new MavenBuildProjectContributor(build, indentingWriterFactory);
-    }
 }

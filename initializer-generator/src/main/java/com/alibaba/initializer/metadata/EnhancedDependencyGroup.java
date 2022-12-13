@@ -36,7 +36,7 @@ public class EnhancedDependencyGroup extends DependencyGroup {
      * if true, this dependency group will hide from web page or idea plugin
      */
     @JsonIgnore
-    private boolean hidden = false;
+    private boolean hide = false;
 
     /**
      * Return the {@link EnhancedDependency dependencies} of this group.
@@ -60,11 +60,11 @@ public class EnhancedDependencyGroup extends DependencyGroup {
     }
 
     public boolean isHide() {
-        return hidden;
+        return hide;
     }
 
-    public void setHidden(boolean hidden) {
-        this.hidden = hidden;
+    public void setHide(boolean hide) {
+        this.hide = hide;
     }
 
 }
