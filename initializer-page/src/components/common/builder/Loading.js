@@ -29,7 +29,7 @@ export default function Loading() {
           </div>
         </div>
       </Control>
-      <Control text='组件依赖'>
+      <Control text='组件与示例'>
         <Placeholder type='tabs' count={2} />
       </Control>
       <Footer>

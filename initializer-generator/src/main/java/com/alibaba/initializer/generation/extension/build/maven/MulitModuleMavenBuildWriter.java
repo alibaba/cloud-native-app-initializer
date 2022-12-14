@@ -250,13 +250,12 @@ public class MulitModuleMavenBuildWriter extends MavenBuildWriter {
     private boolean isNotCodeOnly(String id) {
         io.spring.initializr.metadata.Dependency dep = metadata.getDependencies().get(id);
         if (dep == null) {
-            return false;
+            return true;
         }
-        if (dep instanceof EnhancedDependency) {
-            EnhancedDependency edep = (EnhancedDependency) dep;
+        if (dep instanceof EnhancedDependency edep) {
             return !edep.isCodeOnly();
         }
-        return false;
+        return true;
     }
 
     private void writeDependency(IndentingWriter writer, Dependency dependency) {

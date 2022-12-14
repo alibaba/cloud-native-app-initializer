@@ -98,6 +98,7 @@ public class InitializerMetadataV2JsonMapper extends InitializrMetadataV2JsonMap
         parent.set(capability.getId(), single);
     }
 
+    @Override
     protected void dependencies(ObjectNode parent, DependenciesCapability capability) {
         ObjectNode dependencies = nodeFactory().objectNode();
         dependencies.put("type", capability.getType().getName());
@@ -115,6 +116,7 @@ public class InitializerMetadataV2JsonMapper extends InitializrMetadataV2JsonMap
         parent.set(capability.getId(), dependencies);
     }
 
+    @Override
     protected ObjectNode mapDependencyGroup(DependencyGroup group) {
         ObjectNode result = nodeFactory().objectNode();
         result.put("name", group.getName());
