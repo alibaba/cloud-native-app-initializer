@@ -16,17 +16,6 @@
 
 package com.alibaba.initializer.configure;
 
-import java.util.Enumeration;
-import java.util.Map;
-
-import javax.cache.configuration.MutableConfiguration;
-import javax.cache.expiry.CreatedExpiryPolicy;
-import javax.cache.expiry.Duration;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
 import com.alibaba.initializer.controller.InitializerProjectMetadataController;
 import com.alibaba.initializer.controller.InitializerProjectRequestToDescriptionConverter;
 import com.alibaba.initializer.core.template.CodeTemplateRepoRenderer;
@@ -37,6 +26,7 @@ import com.alibaba.initializer.core.template.loader.LocalRepoTemplateLoader;
 import com.alibaba.initializer.core.template.loader.RootRepoTemplateLoader;
 import com.alibaba.initializer.generation.BootstrapProjectGenerator;
 import com.alibaba.initializer.generation.InitializerProjectGenerationInvoker;
+import com.alibaba.initializer.generation.extension.dependency.DependencyOfDependencyDescriptionCustomizer;
 import com.alibaba.initializer.protocol.CodeGenerationProtocolFilter;
 import com.alibaba.initializer.protocol.archive.ProjectArchiveHandler;
 import com.alibaba.initializer.protocol.git.ProjectGenerationResolver;
@@ -48,9 +38,9 @@ import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.start.site.project.JavaVersionProjectDescriptionCustomizer;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import org.eclipse.jgit.http.server.GitFilter;
 import org.eclipse.jgit.transport.resolver.RepositoryResolver;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -59,7 +49,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
+import javax.cache.configuration.MutableConfiguration;
+import javax.cache.expiry.CreatedExpiryPolicy;
+import javax.cache.expiry.Duration;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
@@ -222,5 +220,10 @@ public class BootstrapProjectGenerationConfigure {
                 .setManagementEnabled(true)
                 .setStatisticsEnabled(true)
                 .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(duration)));
+    }
+
+    @Bean
+    public DependencyOfDependencyDescriptionCustomizer dependencyOfDependencyDescriptionCustomizer(InitializrMetadataProvider metadataProvider) {
+        return new DependencyOfDependencyDescriptionCustomizer(metadataProvider);
     }
 }

@@ -37,9 +37,11 @@ import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.spring.build.maven.MavenBuildProjectContributor;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
+import io.spring.initializr.metadata.InitializrMetadata;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
@@ -53,11 +55,14 @@ public class MulitModuleMavenBuildProjectContributor extends MavenBuildProjectCo
 
     private final MulitModuleMavenBuildWriter buildWriter;
 
-    public MulitModuleMavenBuildProjectContributor(MavenBuild build, IndentingWriterFactory indentingWriterFactory) {
+    private final InitializrMetadata metadata;
+
+    public MulitModuleMavenBuildProjectContributor(MavenBuild build, IndentingWriterFactory indentingWriterFactory, InitializrMetadata metadata) {
         super(build, indentingWriterFactory);
         this.build = build;
         this.indentingWriterFactory = indentingWriterFactory;
-        this.buildWriter = new MulitModuleMavenBuildWriter();
+        this.metadata = metadata;
+        this.buildWriter = new MulitModuleMavenBuildWriter(metadata);
 
         // use reflext to replace MavenBuildWriter
         try {
@@ -90,58 +95,63 @@ public class MulitModuleMavenBuildProjectContributor extends MavenBuildProjectCo
                 builder.configuration(conf -> conf.add("mainClass", description.getPackageName() + "." + description.getApplicationName()).add("skip", "true"));
             });
 
-            // add submodule in root dependencymanager
-            for (Module subModule : arch.getSubModules()) {
-                this.build.boms().add(subModule.getName(),
-                        DependencyBillOfMaterials
-                                .withCoordinates(description.getGroupId(), subModule.getName())
-                                .type(null)
-                                .scope(null)
-                                .version(VersionReference.ofValue(description.getVersion()))
-                );
-            }
+            if (arch == null || CollectionUtils.isEmpty(arch.getSubModules())) {
+                super.contribute(projectRoot);
+            } else {
+                List<Module> modules = arch.getSubModules();
 
-            // create new pom.xml file
-            super.contribute(projectRoot);
-
-            // insert <modules /> to pom.xml
-            List<Module> modules = description.getArchitecture().getSubModules();
-            Path pomFile = projectRoot.resolve("pom.xml");
-            try (RandomAccessFile rw = new RandomAccessFile(pomFile.toFile(), "rw")) {
-                StringBuffer rewrited = new StringBuffer();
-                //not utf-8 but ISO-8859-1 encodng
-                String rawLine;
-                int index = -1;
-                int insetIndex = findModulesInsertLine(pomFile);
-                while ((rawLine = rw.readLine()) != null) {
-                    index++;
-
-                    //trans encoding style
-                    String line = new String(rawLine.getBytes("ISO-8859-1"), "UTF-8");
-                    rewrited.append(line).append("\n");
-
-                    if (index == insetIndex) {
-                        StringWriter sw = new StringWriter();
-                        IndentingWriter writer = indentingWriterFactory
-                                .createIndentingWriter("maven", sw);
-
-                        writer.println();
-                        writer.indented(() -> {
-                            writer.println("<modules>");
-                            writer.indented(() -> modules.stream()
-                                    .map(name -> "<module>" + name.getName() + "</module>")
-                                    .forEach(writer::println));
-                            writer.println("</modules>\n");
-                        });
-
-                        rewrited.append(sw);
-                    }
+                // add submodule in root dependencymanager
+                for (Module subModule : arch.getSubModules()) {
+                    this.build.boms().add(subModule.getName(),
+                            DependencyBillOfMaterials
+                                    .withCoordinates(description.getGroupId(), subModule.getName())
+                                    .type(null)
+                                    .scope(null)
+                                    .version(VersionReference.ofValue(description.getVersion()))
+                    );
                 }
-                rw.seek(0);
-                rw.write(rewrited.toString().getBytes());
-            }
-        } else {
 
+                // create new pom.xml file
+                super.contribute(projectRoot);
+
+                // insert <modules /> to pom.xml
+                Path pomFile = projectRoot.resolve("pom.xml");
+                try (RandomAccessFile rw = new RandomAccessFile(pomFile.toFile(), "rw")) {
+                    StringBuffer rewrited = new StringBuffer();
+                    //not utf-8 but ISO-8859-1 encodng
+                    String rawLine;
+                    int index = -1;
+                    int insetIndex = findModulesInsertLine(pomFile);
+                    while ((rawLine = rw.readLine()) != null) {
+                        index++;
+
+                        //trans encoding style
+                        String line = new String(rawLine.getBytes("ISO-8859-1"), "UTF-8");
+                        rewrited.append(line).append("\n");
+
+                        if (index == insetIndex) {
+                            StringWriter sw = new StringWriter();
+                            IndentingWriter writer = indentingWriterFactory
+                                    .createIndentingWriter("maven", sw);
+
+                            writer.println();
+                            writer.indented(() -> {
+                                writer.println("<modules>");
+                                writer.indented(() -> modules.stream()
+                                        .map(name -> "<module>" + name.getName() + "</module>")
+                                        .forEach(writer::println));
+                                writer.println("</modules>\n");
+                            });
+
+                            rewrited.append(sw);
+                        }
+                    }
+                    rw.seek(0);
+                    rw.write(rewrited.toString().getBytes());
+                }
+            }
+
+        } else {
             if (module.isMain()) {
                 // main module depend all other submodules
                 List<Module> subModules = arch.getSubModules();

@@ -62,14 +62,18 @@ dependencies:
     - name： 分组名称；
     - bom：对应引入的 bom，可选，如果配置了 bom 则版本依赖全部由 bom 控制；
     - compatibilityRange：版本范围，可选。如果配置该值代表支持的 Spring Boot 版本范围，如果不配置则不关注Spring Boot 版本；
+    - hide: 是否在 metadata api 中显示这个分组；
     - content：具体组件依赖
 - 组件依赖
-    - name：依赖名称，展示用
     - id：依赖的唯一标识，需要全局唯一
+    - name：依赖名称，展示用
     - description：依赖描述，展示用
     - groupId、artifactId：依赖坐标
     - starter：是否是 Spring Boot 的 starter
     - links：用于生成 help 文档中放置的关联连接
+    - hide: 是否在 metadata api 中显示这个依赖
+    - codeOnly: 如果为 true，那么在选择这个组件时，不会增加任何 maven 或者是 gradle 依赖，而只会添加对应的示例代码
+    - dependencies: 当前组件依赖的次级组件id，当前选择该组件时，这个属性设置的次级组件也会被同步选择上
 ### 架构配置
 ```yaml
 architecture:

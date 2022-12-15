@@ -276,7 +276,7 @@ export default function Application() {
                 }}
               />
             </Control>
-            <Control text='组件依赖' variant={tab === 'quicksearch' ? 'xl' : 'xxl'}>
+            <Control text='组件与示例' variant={tab === 'quicksearch' ? 'xl' : 'xxl'}>
               <Tabs
                 changeTab={newTab => {
                   if (
