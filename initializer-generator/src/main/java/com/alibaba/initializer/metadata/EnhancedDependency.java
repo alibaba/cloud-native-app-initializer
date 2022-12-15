@@ -29,7 +29,7 @@ import java.util.Map;
 public class EnhancedDependency extends Dependency {
 
     /**
-     * wheather display on web page or idea plugin
+     * whether display on web page or idea plugin
      * if true, this dependency will hide from web page or idea plugin.
      * default false.
      */
