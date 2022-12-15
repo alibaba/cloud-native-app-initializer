@@ -24,7 +24,7 @@ public interface BootstrapTemplateRenderConstants {
     String KEY_BASE_VERSION = "version";
     String KEY_SPRINGBOOT_VERSION = "spring-boot.version";
     String KEY_JAVA_VERSION = "java.version";
-    String KEY_TARGET_MODULE = "targetModule";
+    String KEY_MODULE = "module";
     String KEY_ARTIFACT_ID = "artifactId";
     String KEY_GROUP_ID = "groupId";
 

@@ -16,16 +16,37 @@
 
 package com.alibaba.initializer.metadata;
 
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.spring.initializr.metadata.Dependency;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ArchedDependency extends Dependency {
+public class EnhancedDependency extends Dependency {
+
+    /**
+     * whether display on web page or idea plugin
+     * if true, this dependency will hide from web page or idea plugin.
+     * default false.
+     */
+    private boolean hide = false;
+
+    /**
+     * If true, this dependency will not add any gradle | maven dependency,
+     * but only attach corresponding sample code to generated project.
+     * default false.
+     */
+    private boolean codeOnly = false;
+
+    /**
+     * The sub dependencies of current dependency is selected.
+     * default null.
+     */
+    private List<String> dependencies;
 
     private Map<String, DependencyArchConfig> archCfg;
 
@@ -35,5 +56,29 @@ public class ArchedDependency extends Dependency {
 
     public void setArchCfg(Map<String, DependencyArchConfig> archCfg) {
         this.archCfg = archCfg;
+    }
+
+    public boolean isHide() {
+        return hide;
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
+    }
+
+    public boolean isCodeOnly() {
+        return codeOnly;
+    }
+
+    public void setCodeOnly(boolean codeOnly) {
+        this.codeOnly = codeOnly;
+    }
+
+    public List<String> getDependencies() {
+        return dependencies;
+    }
+
+    public void setDependencies(List<String> dependencies) {
+        this.dependencies = dependencies;
     }
 }

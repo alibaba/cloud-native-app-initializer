@@ -16,19 +16,8 @@
 
 package com.alibaba.initializer.generation.extension.build.maven;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.alibaba.initializer.generation.extension.build.DependencyBillOfMaterials;
+import com.alibaba.initializer.metadata.EnhancedDependency;
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.BomContainer;
 import io.spring.initializr.generator.buildsystem.Dependency;
@@ -56,9 +45,22 @@ import io.spring.initializr.generator.buildsystem.maven.MavenScm;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
-
+import io.spring.initializr.metadata.InitializrMetadata;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * copy from MavenBuildWriter to rewrite prvate methods
@@ -66,6 +68,12 @@ import org.springframework.util.StringUtils;
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
  */
 public class MulitModuleMavenBuildWriter extends MavenBuildWriter {
+
+    private final InitializrMetadata metadata;
+
+    public MulitModuleMavenBuildWriter(InitializrMetadata metadata) {
+        this.metadata = metadata;
+    }
 
     /**
      * Write a {@linkplain MavenBuild pom.xml} using the specified
@@ -92,15 +100,6 @@ public class MulitModuleMavenBuildWriter extends MavenBuildWriter {
             writeDistributionManagement(writer, build.getDistributionManagement());
             writeProfiles(writer, build);
         });
-    }
-
-    /**
-     * Return the {@link Comparator} to use to sort dependencies.
-     *
-     * @return a dependency comparator
-     */
-    protected Comparator<Dependency> getDependencyComparator() {
-        return DependencyComparator.INSTANCE;
     }
 
     private void writeProject(IndentingWriter writer, Runnable whenWritten) {
@@ -213,21 +212,24 @@ public class MulitModuleMavenBuildWriter extends MavenBuildWriter {
     }
 
     private void writeDependencies(IndentingWriter writer, DependencyContainer dependencies) {
-        if (dependencies.isEmpty()) {
+        List<Dependency> items = dependencies.ids()
+                .filter(this::isNotCodeOnly)
+                .map(dependencies::get)
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(items)) {
             return;
         }
         writeElement(writer, "dependencies", () -> {
-            Collection<Dependency> compiledDependencies = writeDependencies(writer, dependencies,
+            Collection<Dependency> compiledDependencies = writeDependencies(writer, items,
                     (scope) -> scope == null || scope == DependencyScope.COMPILE);
             if (!compiledDependencies.isEmpty()) {
                 writer.println();
             }
-            writeDependencies(writer, dependencies, hasScope(DependencyScope.RUNTIME));
-            writeDependencies(writer, dependencies, hasScope(DependencyScope.COMPILE_ONLY));
-            writeDependencies(writer, dependencies, hasScope(DependencyScope.ANNOTATION_PROCESSOR));
-            writeDependencies(writer, dependencies, hasScope(DependencyScope.PROVIDED_RUNTIME));
-            writeDependencies(writer, dependencies,
-                    hasScope(DependencyScope.TEST_COMPILE, DependencyScope.TEST_RUNTIME));
+            writeDependencies(writer, items, hasScope(DependencyScope.RUNTIME));
+            writeDependencies(writer, items, hasScope(DependencyScope.COMPILE_ONLY));
+            writeDependencies(writer, items, hasScope(DependencyScope.ANNOTATION_PROCESSOR));
+            writeDependencies(writer, items, hasScope(DependencyScope.PROVIDED_RUNTIME));
+            writeDependencies(writer, items, hasScope(DependencyScope.TEST_COMPILE, DependencyScope.TEST_RUNTIME));
         });
     }
 
@@ -235,12 +237,25 @@ public class MulitModuleMavenBuildWriter extends MavenBuildWriter {
         return (scope) -> Arrays.asList(validScopes).contains(scope);
     }
 
-    private Collection<Dependency> writeDependencies(IndentingWriter writer, DependencyContainer dependencies,
+    private Collection<Dependency> writeDependencies(IndentingWriter writer, List<Dependency> items,
                                                      Predicate<DependencyScope> filter) {
-        Collection<Dependency> candidates = dependencies.items().filter((dep) -> filter.test(dep.getScope()))
-                .sorted(getDependencyComparator()).collect(Collectors.toList());
+        Collection<Dependency> candidates = items.stream()
+                .filter((dep) -> filter.test(dep.getScope()))
+                .sorted(getDependencyComparator())
+                .collect(Collectors.toList());
         writeCollection(writer, candidates, this::writeDependency);
         return candidates;
+    }
+
+    private boolean isNotCodeOnly(String id) {
+        io.spring.initializr.metadata.Dependency dep = metadata.getDependencies().get(id);
+        if (dep == null) {
+            return true;
+        }
+        if (dep instanceof EnhancedDependency edep) {
+            return !edep.isCodeOnly();
+        }
+        return true;
     }
 
     private void writeDependency(IndentingWriter writer, Dependency dependency) {

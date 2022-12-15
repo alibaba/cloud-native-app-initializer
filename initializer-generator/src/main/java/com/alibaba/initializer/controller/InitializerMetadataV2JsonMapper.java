@@ -16,19 +16,24 @@
 
 package com.alibaba.initializer.controller;
 
-import java.lang.reflect.Field;
-import java.util.stream.Collectors;
-
 import com.alibaba.initializer.metadata.ArchitectureCapability;
+import com.alibaba.initializer.metadata.EnhancedDependency;
+import com.alibaba.initializer.metadata.EnhancedDependencyGroup;
 import com.alibaba.initializer.metadata.InitializerMetadata;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.metadata.DefaultMetadataElement;
+import io.spring.initializr.metadata.DependenciesCapability;
+import io.spring.initializr.metadata.DependencyGroup;
+import io.spring.initializr.metadata.Describable;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.web.mapper.InitializrMetadataV2JsonMapper;
-
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariables;
+
+import java.lang.reflect.Field;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
@@ -59,7 +64,6 @@ public class InitializerMetadataV2JsonMapper extends InitializrMetadataV2JsonMap
         }
     }
 
-
     @Override
     public String write(InitializrMetadata metadata, String appUrl) {
         InitializerMetadata initializerMetadata = (InitializerMetadata) metadata;
@@ -89,10 +93,51 @@ public class InitializerMetadataV2JsonMapper extends InitializrMetadataV2JsonMap
             single.put("default", defaultType.getId());
         }
         ArrayNode values = nodeFactory().arrayNode();
-        values.addAll(capability.getContent().stream().map(this::mapValue)
-                .collect(Collectors.toList()));
+        values.addAll(capability.getContent().stream().map(this::mapValue).collect(Collectors.toList()));
         single.set("values", values);
         parent.set(capability.getId(), single);
+    }
+
+    @Override
+    protected void dependencies(ObjectNode parent, DependenciesCapability capability) {
+        ObjectNode dependencies = nodeFactory().objectNode();
+        dependencies.put("type", capability.getType().getName());
+        ArrayNode values = nodeFactory().arrayNode();
+        values.addAll(capability.getContent().stream().filter(group -> {
+            if (group instanceof EnhancedDependencyGroup) {
+                if (((EnhancedDependencyGroup) group).isHide()) {
+                    // do not add hidden dependency group to json meta
+                    return false;
+                }
+            }
+            return true;
+        }).map(this::mapDependencyGroup).collect(Collectors.toList()));
+        dependencies.set("values", values);
+        parent.set(capability.getId(), dependencies);
+    }
+
+    @Override
+    protected ObjectNode mapDependencyGroup(DependencyGroup group) {
+        ObjectNode result = nodeFactory().objectNode();
+        result.put("name", group.getName());
+        if ((group instanceof Describable) && ((Describable) group).getDescription() != null) {
+            result.put("description", ((Describable) group).getDescription());
+        }
+        ArrayNode items = nodeFactory().arrayNode();
+        group.getContent().forEach((it) -> {
+            if (it instanceof EnhancedDependency) {
+                if (((EnhancedDependency) it).isHide()) {
+                    // do not add hidden dependency to json metadata
+                    return;
+                }
+            }
+            JsonNode dependency = mapDependency(it);
+            if (dependency != null) {
+                items.add(dependency);
+            }
+        });
+        result.set("values", items);
+        return result;
     }
 
 }
