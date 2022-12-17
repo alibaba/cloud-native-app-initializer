@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -38,13 +39,14 @@ import com.alibaba.initializer.core.template.CodeTemplateRepoRenderer;
 import com.alibaba.initializer.core.template.RepoRenderResult;
 import com.alibaba.initializer.core.template.loader.RootRepoTemplateLoader;
 import com.alibaba.initializer.generation.constants.BootstrapTemplateRenderConstants;
-import com.alibaba.initializer.metadata.EnhancedDependency;
 import com.alibaba.initializer.metadata.Architecture;
 import com.alibaba.initializer.metadata.DependencyArchConfig;
+import com.alibaba.initializer.metadata.EnhancedDependency;
 import com.alibaba.initializer.metadata.InitializerMetadata;
 import com.alibaba.initializer.metadata.Module;
 import com.alibaba.initializer.metadata.ModuleConfig;
 import com.alibaba.initializer.project.InitializerProjectDescription;
+import com.google.common.collect.Sets;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.SourceStructure;
@@ -68,6 +70,11 @@ public class SampleCodeContributor implements ProjectContributor {
     private String templates;
 
     private static final String PACKAGE_PATTEN = "package ([a-z0-9\\.]+)\\;";
+
+    /**
+     * Constant for the resource path separator.
+     */
+    private static final String RESOURCE_PATH_SEPARATOR = "/";
 
     @Autowired
     private Module module;
@@ -100,8 +107,11 @@ public class SampleCodeContributor implements ProjectContributor {
         SourceStructure structure = description.getBuildSystem().getMainSource(projectRoot, language);
 
         Map<Dependency, String> dependencyRepoUris = getRepos(description);
-
-        dependencyRepoUris.forEach((dependency, uri) -> {
+        Set<String> uris = Sets.newHashSet(dependencyRepoUris.values());
+        dependencyRepoUris.values().forEach(uri -> {
+            uris.add(String.join(RESOURCE_PATH_SEPARATOR, uri, module.getName()));
+        });
+        uris.forEach(uri -> {
             CodeTemplateRepo repo = loader.load(uri);
             RepoRenderResult result = renderer.render(repo, params);
 
