@@ -3,6 +3,9 @@ package com.alibaba.initializer.generation.extension.build.gradle;
 import com.alibaba.initializer.metadata.Architecture;
 import com.alibaba.initializer.metadata.Module;
 import com.alibaba.initializer.project.InitializerProjectDescription;
+import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.buildsystem.DependencyContainer;
+import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildWriter;
@@ -13,9 +16,18 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
+ * Extension GradleBuildWriter to support multi-project
+ *
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
  * @see GradleBuildWriter
  */
@@ -69,13 +81,72 @@ public class EnhancedGradleBuildWriter {
         }
     }
 
+    private void writeDependencies(IndentingWriter writer, GradleBuild build) {
+        Set<Dependency> sortedDependencies = new LinkedHashSet<>();
+        DependencyContainer dependencies = build.dependencies();
+        sortedDependencies
+                .addAll(filterDependencies(dependencies, (scope) -> scope == null || scope == DependencyScope.COMPILE));
+        sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.COMPILE_ONLY)));
+        sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.RUNTIME)));
+        sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.ANNOTATION_PROCESSOR)));
+        sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.PROVIDED_RUNTIME)));
+        sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE)));
+        sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_RUNTIME)));
+
+        List<String> modules = writeModuleDependencies();
+        if (!sortedDependencies.isEmpty() || !modules.isEmpty()) {
+            writer.println();
+            writer.println("dependencies" + " {");
+            writer.indented(() -> {
+                modules.forEach(module -> writeModuleDependency(writer, module));
+                sortedDependencies.forEach((dependency) -> writeDependency(writer, dependency));
+            });
+            writer.println("}");
+        }
+    }
+
     private void writeApplies(IndentingWriter writer, GradleBuild build) {
         List<StandardGradlePlugin> extractStandardPlugins = run("extractStandardPlugin", build);
         extractStandardPlugins.forEach(plugin -> writer.println("apply plugin: '" + plugin.getId() + "'"));
     }
 
-    private void writeDependencies(IndentingWriter writer, GradleBuild build) {
-        run("writeDependencies", writer, build);
+    private List<String> writeModuleDependencies() {
+        List<String> modules = new ArrayList<>();
+        Architecture arch = description.getArchitecture();
+
+        if (module.isMain()) {
+            // main module depend all other submodules
+            List<Module> subModules = arch.getSubModules();
+            for (Module subModule : subModules) {
+                if (subModule == module) {
+                    continue;
+                }
+                modules.add(subModule.getName());
+            }
+        } else {
+            List<String> dependModules = module.getDependModules();
+            if (dependModules != null) {
+                modules.addAll(dependModules);
+            }
+        }
+        return modules.stream().distinct().collect(Collectors.toList());
+    }
+
+    private void writeModuleDependency(IndentingWriter writer, String subModule) {
+        writer.println(String.format("implementation project(':%s')", subModule));
+    }
+
+    protected void writeDependency(IndentingWriter writer, Dependency dependency) {
+        run("writeDependency", writer, dependency);
+    }
+
+    private Collection<Dependency> filterDependencies(DependencyContainer dependencies,
+                                                      Predicate<DependencyScope> filter) {
+        return run("filterDependencies", dependencies, filter);
+    }
+
+    private Predicate<DependencyScope> hasScope(DependencyScope... validScopes) {
+        return (scope) -> Arrays.asList(validScopes).contains(scope);
     }
 
     private <T> T run(String methodName, Object... args) {

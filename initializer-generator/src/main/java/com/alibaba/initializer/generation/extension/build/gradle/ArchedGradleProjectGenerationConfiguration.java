@@ -17,9 +17,7 @@ package com.alibaba.initializer.generation.extension.build.gradle;
 
 import com.alibaba.initializer.generation.extension.build.ModuleDependencyBuildCustormizer;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuildWriter;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
-import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -31,12 +29,6 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnBuildSystem(GradleBuildSystem.ID)
 @Import(io.spring.initializr.generator.spring.build.gradle.GradleProjectGenerationConfiguration.class)
 public class ArchedGradleProjectGenerationConfiguration {
-
-    private final IndentingWriterFactory indentingWriterFactory;
-
-    public ArchedGradleProjectGenerationConfiguration(IndentingWriterFactory indentingWriterFactory) {
-        this.indentingWriterFactory = indentingWriterFactory;
-    }
 
     @Bean
     public ModuleDependencyBuildCustormizer moduleDependencyBuildCustormizer() {
@@ -54,12 +46,6 @@ public class ArchedGradleProjectGenerationConfiguration {
     }
 
     @Bean
-    public MulitModuleGradleBuildCustoimzer mulitModuleGradleBuildCustoimzer() {
-        return new MulitModuleGradleBuildCustoimzer();
-    }
-
-    // overwrite GradleBuildProjectContributor from GradleProjectGenerationConfiguration
-    @Bean
     public GradleBuildProjectContributorAspect gradleBuildProjectContributorAspect() {
         return new GradleBuildProjectContributorAspect();
     }
@@ -69,20 +55,4 @@ public class ArchedGradleProjectGenerationConfiguration {
         return new EnhancedGradleBuildWriter();
     }
 
-    // overwrite GradleBuild from GradleProjectGenerationConfiguration
-//    @Bean
-//    @Primary
-//    public GradleBuild gradleBuild(ObjectProvider<BuildItemResolver> buildItemResolver,
-//                                   ObjectProvider<BuildCustomizer<?>> buildCustomizers) {
-//        return createGradleBuild(buildItemResolver.getIfAvailable(), buildCustomizers.orderedStream().collect(Collectors.toList()));
-//    }
-
-//    @SuppressWarnings("unchecked")
-//    private GradleBuild createGradleBuild(BuildItemResolver buildItemResolver,
-//                                          List<BuildCustomizer<?>> buildCustomizers) {
-//        EnhancedGradleBuild build = (buildItemResolver != null) ? new EnhancedGradleBuild(buildItemResolver) : new EnhancedGradleBuild();
-//        LambdaSafe.callbacks(BuildCustomizer.class, buildCustomizers, build)
-//                .invoke((customizer) -> customizer.customize(build));
-//        return build;
-//    }
 }
