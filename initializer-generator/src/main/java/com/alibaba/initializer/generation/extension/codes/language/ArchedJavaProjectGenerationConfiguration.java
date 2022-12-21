@@ -20,9 +20,7 @@ import com.alibaba.initializer.generation.InitializerProjectGenerationConfigurat
 import com.alibaba.initializer.generation.condition.ConditionalOnModule;
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.language.java.JavaLanguage;
-import io.spring.initializr.generator.spring.code.SourceCodeProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.code.java.JavaProjectGenerationConfiguration;
-
 import org.springframework.context.annotation.Import;
 
 /**
@@ -31,7 +29,7 @@ import org.springframework.context.annotation.Import;
 @InitializerProjectGenerationConfiguration
 @ConditionalOnModule(main = true)
 @ConditionalOnLanguage(JavaLanguage.ID)
-@Import({JavaProjectGenerationConfiguration.class, SourceCodeProjectGenerationConfiguration.class})
+@Import({JavaProjectGenerationConfiguration.class})
 public class ArchedJavaProjectGenerationConfiguration {
 
 }

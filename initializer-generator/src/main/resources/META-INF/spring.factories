@@ -1,9 +1,11 @@
 com.alibaba.initializer.generation.InitializerProjectGenerationConfiguration=\
 io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration,\
+com.alibaba.initializer.generation.extension.codes.language.ArchedSourceCodeProjectGenerationConfiguration,\
 com.alibaba.initializer.generation.extension.codes.language.ArchedJavaProjectGenerationConfiguration,\
 com.alibaba.initializer.generation.extension.codes.language.ArchedGroovyProjectGenerationConfiguration,\
 com.alibaba.initializer.generation.extension.codes.language.ArchedKotlinProjectGenerationConfiguration,\
 com.alibaba.initializer.generation.extension.build.gradle.ArchedGradleProjectGenerationConfiguration,\
+com.alibaba.initializer.generation.extension.build.gradle.GroovyCustomizerConfiguration,\
 io.spring.start.site.extension.build.gradle.GradleProjectGenerationConfiguration,\
 com.alibaba.initializer.generation.extension.build.maven.ArchedMavenProjectGenerationConfiguration,\
 io.spring.start.site.extension.build.maven.MavenProjectGenerationConfiguration,\

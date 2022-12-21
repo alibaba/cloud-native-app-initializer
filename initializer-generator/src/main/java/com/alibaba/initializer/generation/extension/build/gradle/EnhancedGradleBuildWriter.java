@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.alibaba.initializer.generation.extension.build.gradle;
 
 import com.alibaba.initializer.metadata.Architecture;
@@ -9,7 +25,6 @@ import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildWriter;
-import io.spring.initializr.generator.buildsystem.gradle.StandardGradlePlugin;
 import io.spring.initializr.generator.io.IndentingWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -49,6 +64,11 @@ public class EnhancedGradleBuildWriter {
             delegated.writeTo(writer, build);
             return;
         }
+//        if (GroovyLanguage.ID.equals(description.getLanguage().id())) {
+//            if (!build.plugins().has("groovy")) {
+//                build.plugins().add("groovy");
+//            }
+//        }
 
         GradleBuildSettings settings = build.getSettings();
         if (module.isRoot()) {
@@ -106,8 +126,7 @@ public class EnhancedGradleBuildWriter {
     }
 
     private void writeApplies(IndentingWriter writer, GradleBuild build) {
-        List<StandardGradlePlugin> extractStandardPlugins = run("extractStandardPlugin", build);
-        extractStandardPlugins.forEach(plugin -> writer.println("apply plugin: '" + plugin.getId() + "'"));
+        build.plugins().values().forEach(plugin -> writer.println("apply plugin: '" + plugin.getId() + "'"));
     }
 
     private List<String> writeModuleDependencies() {
