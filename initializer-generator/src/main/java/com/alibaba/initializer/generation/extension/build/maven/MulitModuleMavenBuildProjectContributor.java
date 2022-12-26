@@ -153,22 +153,22 @@ public class MulitModuleMavenBuildProjectContributor extends MavenBuildProjectCo
             }
 
         } else {
+            List<String> dependModules
+                    = module.getDependModules() == null ? Collections.emptyList() : module.getDependModules().stream()
+                    .distinct().map(this::toFinalArtifactId).toList();
             if (module.isMain()) {
-                // main module depend all other submodules
-                List<Module> subModules = arch.getSubModules();
-                for (Module subModule : subModules) {
-                    if (subModule == module) {
-                        continue;
-                    }
-                    addModuleDependency(toFinalArtifactId(subModule.getName()));
+                if (dependModules.isEmpty()) {
+                    // main module depend all other submodules
+                    List<String> subModules = arch.getSubModules().stream().distinct()
+                            .filter(subModule -> subModule != module)
+                            .map(subModule -> toFinalArtifactId(subModule.getName()))
+                            .toList();
+                    addModuleDependencies(subModules);
+                } else {
+                    addModuleDependencies(dependModules);
                 }
             } else {
-                List<String> dependModules
-                        = module.getDependModules() == null ? Collections.emptyList() : module.getDependModules().stream()
-                        .distinct().map(dependModule -> toFinalArtifactId(dependModule)).collect(Collectors.toUnmodifiableList());
-                for (String dependModule : dependModules) {
-                    addModuleDependency(dependModule);
-                }
+                addModuleDependencies(dependModules);
             }
 
             // remove all dependencymanager
@@ -203,6 +203,12 @@ public class MulitModuleMavenBuildProjectContributor extends MavenBuildProjectCo
 
         } catch (Exception e) {
             throw new RuntimeException("cleanup maven properties failed", e);
+        }
+    }
+
+    private void addModuleDependencies(List<String> dependModules) {
+        for (String dependModule : dependModules) {
+            addModuleDependency(dependModule);
         }
     }
 
