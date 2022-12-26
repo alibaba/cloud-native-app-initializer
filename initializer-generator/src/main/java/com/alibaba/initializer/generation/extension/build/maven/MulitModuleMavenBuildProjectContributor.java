@@ -21,6 +21,7 @@ import java.io.RandomAccessFile;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -102,9 +103,9 @@ public class MulitModuleMavenBuildProjectContributor extends MavenBuildProjectCo
 
                 // add submodule in root dependencymanager
                 for (Module subModule : arch.getSubModules()) {
-                    this.build.boms().add(subModule.getName(),
+                    this.build.boms().add(toFinalArtifactId(subModule.getName()),
                             DependencyBillOfMaterials
-                                    .withCoordinates(description.getGroupId(), subModule.getName())
+                                    .withCoordinates(description.getGroupId(), toFinalArtifactId(subModule.getName()))
                                     .type(null)
                                     .scope(null)
                                     .version(VersionReference.ofValue(description.getVersion()))
@@ -138,7 +139,7 @@ public class MulitModuleMavenBuildProjectContributor extends MavenBuildProjectCo
                             writer.indented(() -> {
                                 writer.println("<modules>");
                                 writer.indented(() -> modules.stream()
-                                        .map(name -> "<module>" + name.getName() + "</module>")
+                                        .map(name -> "<module>" + toFinalArtifactId(name.getName()) + "</module>")
                                         .forEach(writer::println));
                                 writer.println("</modules>\n");
                             });
@@ -159,14 +160,14 @@ public class MulitModuleMavenBuildProjectContributor extends MavenBuildProjectCo
                     if (subModule == module) {
                         continue;
                     }
-                    addModuleDependency(subModule.getName());
+                    addModuleDependency(toFinalArtifactId(subModule.getName()));
                 }
             } else {
-                List<String> dependModules = module.getDependModules();
-                if (dependModules != null) {
-                    for (String dependModule : dependModules) {
-                        addModuleDependency(dependModule);
-                    }
+                List<String> dependModules
+                        = module.getDependModules() == null ? Collections.emptyList() : module.getDependModules().stream()
+                        .distinct().map(dependModule -> toFinalArtifactId(dependModule)).collect(Collectors.toUnmodifiableList());
+                for (String dependModule : dependModules) {
+                    addModuleDependency(dependModule);
                 }
             }
 
@@ -175,8 +176,8 @@ public class MulitModuleMavenBuildProjectContributor extends MavenBuildProjectCo
 
             // set parent
             this.build.settings().parent(description.getGroupId(), description.getArtifactId(), description.getVersion(), "../pom.xml");
-            this.build.settings().name(module.getName());
-            this.build.settings().artifact(module.getName());
+            this.build.settings().name(toFinalArtifactId(module.getName()));
+            this.build.settings().artifact(toFinalArtifactId(module.getName()));
             this.build.settings().group(null);
             this.build.settings().version(null);
             this.build.settings().description(module.getDescription());
@@ -228,6 +229,10 @@ public class MulitModuleMavenBuildProjectContributor extends MavenBuildProjectCo
             }
         }
         return insertIndex;
+    }
+
+    private String toFinalArtifactId(String subModule) {
+        return description.getName() + "-" + subModule;
     }
 
 }
