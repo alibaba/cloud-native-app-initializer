@@ -16,7 +16,8 @@
 请在本地 clone 该项目，并确保具备 Java 17 环境。
 
 ### 构建项目
-在项目根目录，执行以下命令，安装 Node 和 Yarn：
+
+首先，确保 python 在您的环境中已经安装。在项目根目录，执行以下命令，安装 Node 和 Yarn：
 ```shell
 mvn compile -P install-yarn
 ```
