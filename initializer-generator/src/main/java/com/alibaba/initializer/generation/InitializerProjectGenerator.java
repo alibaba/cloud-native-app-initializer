@@ -16,14 +16,14 @@
 
 package com.alibaba.initializer.generation;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
 import io.spring.initializr.generator.project.ProjectGenerator;
-
 import org.springframework.core.io.support.SpringFactoriesLoader;
+
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
@@ -31,8 +31,17 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
 public class InitializerProjectGenerator extends ProjectGenerator {
 
     public InitializerProjectGenerator(Consumer<ProjectGenerationContext> contextConsumer) {
-        super(contextConsumer);
+        super(contextConsumer, defaultContextFactory());
     }
+
+    private static Supplier<ProjectGenerationContext> defaultContextFactory() {
+        return () -> {
+            ProjectGenerationContext context = new ProjectGenerationContext();
+            context.setAllowBeanDefinitionOverriding(true);
+            return context;
+        };
+    }
+
 
     @Override
     protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description) {
