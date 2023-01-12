@@ -339,6 +339,12 @@ initializr:
           groupId: com.alibaba.cloud
           artifactId: spring-cloud-starter-alibaba-governance-auth
           starter: false
+          links:
+            - rel: reference
+              href: https://spring-cloud-alibaba-group.github.io/github-pages/hoxton/2.2.10-RC1/en-us/index.html#_authentication
+            - rel: guide
+              href: https://github.com/alibaba/spring-cloud-alibaba/tree/2.2.x/spring-cloud-alibaba-examples/governance-example/authentication-example
+              description: Auth Example
         - name: Spring Cloud Alibaba Governance Routing
           compatibilityRange: "[2.2.0.RELEASE,2.4.0)"
           id: sca-governance-routing
@@ -346,6 +352,12 @@ initializr:
           groupId: com.alibaba.cloud
           artifactId: spring-cloud-starter-alibaba-governance-routing
           starter: false
+          links:
+            - rel: reference
+              href: https://spring-cloud-alibaba-group.github.io/github-pages/hoxton/2.2.10-RC1/en-us/index.html#_routing
+            - rel: guide
+              href: https://github.com/alibaba/spring-cloud-alibaba/tree/2.2.x/spring-cloud-alibaba-examples/governance-example/label-routing-example
+              description: Routing Example
         - name: Spring Cloud Alibaba xDS Adapter
           compatibilityRange: "[2.2.0.RELEASE,2.4.0)"
           id: sca-xds-adapter
@@ -353,6 +365,9 @@ initializr:
           groupId: com.alibaba.cloud
           artifactId: spring-cloud-starter-xds-adapter
           starter: false
+          links:
+            - rel: reference
+              href: https://spring-cloud-alibaba-group.github.io/github-pages/hoxton/2.2.10-RC1/en-us/index.html#_resource_transform
         - name: Spring Cloud Alibaba OpenSergo Adapter
           compatibilityRange: "[2.2.0.RELEASE,2.4.0)"
           id: sca-opensergo-adapter
@@ -360,6 +375,9 @@ initializr:
           groupId: com.alibaba.cloud
           artifactId: spring-cloud-starter-opensergo-adapter
           starter: false
+          links:
+            - rel: reference
+              href: https://spring-cloud-alibaba-group.github.io/github-pages/hoxton/2.2.10-RC1/en-us/index.html#_resource_transform
     - name: Developer Tools
       content:
         - name: Arthas
@@ -1810,8 +1828,8 @@ initializr:
       default: true
     - name: 2.4.2
       id: 2.4.2
-    - name: 2.2.2.RELEASE
-      id: 2.2.2.RELEASE
+    - name: 2.3.12.RELEASE
+      id: 2.3.12.RELEASE
   architecture:
     - id: none
       name: 单模块
