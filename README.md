@@ -15,6 +15,9 @@ This is a Cloud Native App Initializer project derived from Spring Initializr, y
 Please clone the project locally and make sure you have a Java 17 environment.
 
 ### Build project
+
+Make sure you have python installed on your computer.
+
 In the project root directory, execute the following commands to install `Node` and `Yarn`:
 ```shell
 mvn compile -P install-yarn
