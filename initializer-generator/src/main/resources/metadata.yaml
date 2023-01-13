@@ -289,12 +289,6 @@ initializr:
           artifactId: spring-cloud-alibaba-sentinel-datasource
           description: 提供 Sentinel 动态数据源接入支持，方便用户整合 Nacos 等数据源动态管理规则
           starter: false
-        - name: Spring Cloud Alibaba Sentinel Dubbo Adapter
-          id: sca-sentinel-dubbo-adapter
-          groupId: com.alibaba.csp
-          artifactId: sentinel-apache-dubbo-adapter
-          description: 提供 Sentinel 对 Dubbo 的适配能力
-          starter: false
         - name: Spring Cloud Alibaba Sentinel Gateway
           id: sca-sentinel-gateway
           groupId: com.alibaba.cloud
