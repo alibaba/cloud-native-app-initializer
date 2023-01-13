@@ -157,7 +157,9 @@ initializr:
         artifactId: spring-cloud-alibaba-dependencies
         versionProperty: spring-cloud-alibaba.version
         mappings:
-          - compatibilityRange: "[2.6.11, 2.6.11]"
+          - compatibilityRange: "[3.0.0, 3.0.1)"
+            version: 2022.0.0.0-RC1
+          - compatibilityRange: "[2.6.11, 3.0.0)"
             version: 2021.0.4.0
           - compatibilityRange: "[2.6.0,2.6.11)"
             version: 2021.0.1.0
@@ -255,7 +257,7 @@ initializr:
               href: https://github.com/alibaba/aliyun-spring-boot/tree/master/aliyun-spring-boot-samples/aliyun-schedulerx-spring-boot-sample
     - name: Spring Cloud Alibaba
       bom: spring-cloud-alibaba
-      compatibilityRange: "[2.0.0.RELEASE,2.6.11]"
+      compatibilityRange: "[2.0.0.RELEASE,3.0.0]"
       content:
         - name: Nacos Service Discovery
           id: sca-nacos-discovery
