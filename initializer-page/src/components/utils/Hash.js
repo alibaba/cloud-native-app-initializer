@@ -1,10 +1,10 @@
 import queryString from 'query-string'
-import {toast} from 'react-toastify'
-import {useContext, useEffect, useState} from 'react'
+import { toast } from 'react-toastify'
+import { useContext, useEffect, useState } from 'react'
 
-import {AppContext} from '../reducer/App'
-import {InitializrContext} from '../reducer/Initializr'
-import {isValidParams} from './ApiUtils'
+import { AppContext } from '../reducer/App'
+import { InitializrContext } from '../reducer/Initializr'
+import { isValidParams } from './ApiUtils'
 
 const getHash = () => {
   return window.location.hash
@@ -39,6 +39,14 @@ export default function useHash() {
   useEffect(() => {
     if (complete && hash) {
       const params = queryString.parse(`?${hash.substr(2)}`)
+      if (window.safemode) {
+        delete params.artifactId
+        delete params.groupId
+        delete params.description
+        delete params.name
+        delete params.packageName
+      }
+      console.debug('asdasdasd', window.safemode, params);
       dispatch({ type: 'LOAD', payload: { params, lists: config.lists } })
       clearHash()
       setHash('')
