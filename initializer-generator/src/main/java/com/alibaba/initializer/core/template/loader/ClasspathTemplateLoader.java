@@ -60,7 +60,7 @@ public class ClasspathTemplateLoader implements CodeTemplateRepoLoader {
 
             List<CodeTemplate> templates = Arrays.stream(resources)
                     .filter(Resource::isReadable)
-                    .map(item -> toTemplte(item, rootPath))
+                    .map(item -> toTemplate(item, rootPath))
                     .collect(Collectors.toList());
 
             return new CodeTemplateRepo(uri, templates);
@@ -69,7 +69,7 @@ public class ClasspathTemplateLoader implements CodeTemplateRepoLoader {
         }
     }
 
-    private CodeTemplate toTemplte(Resource resource, Path scanRootPath) {
+    private CodeTemplate toTemplate(Resource resource, Path scanRootPath) {
 
         try {
             URL url = resource.getURL();
