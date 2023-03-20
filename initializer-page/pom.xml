@@ -54,7 +54,7 @@
                 <executions>
                     <execution>
                         <id>copy-base-web-resource</id>
-                        <phase>prepare-package</phase>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>

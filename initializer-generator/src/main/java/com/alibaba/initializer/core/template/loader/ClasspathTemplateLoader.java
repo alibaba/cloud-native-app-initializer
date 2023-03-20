@@ -16,44 +16,26 @@
 
 package com.alibaba.initializer.core.template.loader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.stream.Collectors;
-
 import com.alibaba.initializer.core.constants.ErrorCodeEnum;
 import com.alibaba.initializer.core.exception.BizRuntimeException;
 import com.alibaba.initializer.core.template.CodeTemplate;
 import com.alibaba.initializer.core.template.CodeTemplateRepo;
 import com.alibaba.initializer.core.template.CodeTemplateRepoLoader;
-import com.google.common.collect.Lists;
-import lombok.SneakyThrows;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.util.ResourceUtils;
-
 import static org.springframework.util.ResourceUtils.JAR_URL_SEPARATOR;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * load template file from classpath
@@ -72,12 +54,13 @@ public class ClasspathTemplateLoader implements CodeTemplateRepoLoader {
         try {
             URI uri = new URI(uriStr);
 
-            Resource[] resources = resourceLoader.getResources(CLASSPAHT_PREFIX + uri.getPath());
+            Path rootPath = Paths.get(uri.getPath());
+
+            Resource[] resources = resourceLoader.getResources(CLASSPAHT_PREFIX + rootPath + "/**");
 
             List<CodeTemplate> templates = Arrays.stream(resources)
-                    .filter(Resource::exists)
-                    .map(this::scanTemplte)
-                    .flatMap(Collection::stream)
+                    .filter(Resource::isReadable)
+                    .map(item -> toTemplte(item, rootPath))
                     .collect(Collectors.toList());
 
             return new CodeTemplateRepo(uri, templates);
@@ -86,99 +69,23 @@ public class ClasspathTemplateLoader implements CodeTemplateRepoLoader {
         }
     }
 
-    @SneakyThrows
-    private List<CodeTemplate> scanTemplte(Resource resource) {
-        List<CodeTemplate> templates = Lists.newArrayList();
+    private CodeTemplate toTemplte(Resource resource, Path scanRootPath) {
 
-        URL url = resource.getURL();
+        try {
+            URL url = resource.getURL();
 
-        if (ResourceUtils.isFileURL(url)) {
-            visitFileSystem(templates::add, resource);
-        } else if (ResourceUtils.isJarURL(url)) {
-            visitJarSystem(templates::add, resource);
-        }
+            String urlFile = url.getFile();
 
-        return templates;
-    }
+            int separatorIndex = urlFile.lastIndexOf(JAR_URL_SEPARATOR);
 
-    private void visitFileSystem(TempFileVisitor visitor, Resource resource)
-            throws IOException {
-        if (!resource.isFile()) {
-            return;
-        }
-        File rootFile = resource.getFile();
-        Path scanRoot = Paths.get(rootFile.getAbsolutePath());
-        Files.walkFileTree(scanRoot, EnumSet.of(FileVisitOption.FOLLOW_LINKS),
-                Integer.MAX_VALUE, new FileVisitor<Path>() {
-                    @Override
-                    public FileVisitResult preVisitDirectory(Path dir,
-                                                             BasicFileAttributes attrs) {
-                        return FileVisitResult.CONTINUE;
-                    }
-
-                    @Override
-                    public FileVisitResult visitFile(Path originPath,
-                                                     BasicFileAttributes attrs) {
-                        String fileName = originPath.getFileName().toString();
-
-                        Path relativePath = originPath.subpath(scanRoot.getNameCount(),
-                                originPath.getNameCount());
-                        Path relativeFolderPath = relativePath.getNameCount() == 1
-                                ? null
-                                : relativePath.subpath(0,
-                                relativePath.getNameCount() - 1);
-
-                        visitor.visit(new CodeTemplate(relativeFolderPath, fileName) {
-                                          @Override
-                                          public Reader getReader() {
-                                              try {
-                                                  return new FileReader(originPath.toFile());
-                                              } catch (FileNotFoundException e) {
-                                                  throw new BizRuntimeException(ErrorCodeEnum.SYSTEM_ERROR, "", e);
-                                              }
-                                          }
-                                      }
-                        );
-                        return FileVisitResult.CONTINUE;
-                    }
-
-                    @Override
-                    public FileVisitResult visitFileFailed(Path file, IOException exc) {
-                        return FileVisitResult.CONTINUE;
-                    }
-
-                    @Override
-                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
-                        return FileVisitResult.CONTINUE;
-                    }
-                });
-    }
-
-    private void visitJarSystem(TempFileVisitor visitor, Resource resource) throws IOException {
-        URL url = resource.getURL();
-
-        URL jarUrl = ResourceUtils.extractJarFileURL(url);
-
-        JarFile jarFile = new JarFile(jarUrl.getFile());
-
-        Enumeration<JarEntry> entries = jarFile.entries();
-
-        String resourcePath = url.getFile();
-
-        // the scan root from jar file
-        String scanRoot = resourcePath.substring(resourcePath.indexOf(JAR_URL_SEPARATOR) + JAR_URL_SEPARATOR.length());
-        Path scanRootPath = Paths.get(scanRoot);
-
-        while (entries.hasMoreElements()) {
-            JarEntry entry = entries.nextElement();
-
-            // the full name of jar entry
-            String entryName = entry.getName();
-            if (!entryName.startsWith(scanRoot) || entry.isDirectory()) {
-                continue;
+            if (separatorIndex > -1) {
+                urlFile = urlFile.substring(separatorIndex + 1);
+            } else {
+                String classpathPath = ClasspathTemplateLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+                urlFile = urlFile.startsWith(classpathPath) ? urlFile.replace(classpathPath, "/") : urlFile;
             }
 
-            Path entryPath = Paths.get(entryName);
+            Path entryPath = Paths.get(urlFile);
             String fileName = entryPath.getFileName().toString();
 
             Path relativePath = entryPath.subpath(scanRootPath.getNameCount(), entryPath.getNameCount());
@@ -187,23 +94,15 @@ public class ClasspathTemplateLoader implements CodeTemplateRepoLoader {
                     : relativePath.subpath(0,
                     relativePath.getNameCount() - 1);
 
-            visitor.visit(new CodeTemplate(relativeFolderPath, fileName) {
-                              @Override
-                              public Reader getReader() {
-                                  try {
-                                      return new InputStreamReader(resourceLoader.getResource("classpath:/" + entryPath.toString()).getInputStream());
-                                  } catch (IOException e) {
-                                      throw new BizRuntimeException(ErrorCodeEnum.SYSTEM_ERROR, "load resource error", e);
-                                  }
-                              }
-                          }
-            );
+            return new CodeTemplate(relativeFolderPath, fileName) {
+                @Override
+                public Reader getReader() throws IOException {
+                    return new InputStreamReader(resource.getInputStream());
+                }
+            };
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-    }
-
-    @FunctionalInterface
-    public interface TempFileVisitor {
-        void visit(CodeTemplate template);
     }
 
     @Override
