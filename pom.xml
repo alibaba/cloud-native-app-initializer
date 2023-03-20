@@ -26,6 +26,7 @@
     <modules>
         <module>initializer-page</module>
         <module>initializer-generator</module>
+        <module>initializer-start</module>
     </modules>
 
     <dependencyManagement>
@@ -48,29 +49,17 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>initializer-generator</artifactId>
-                <version>0.8</version>
+                <version>${revision}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>initializer-page</artifactId>
-                <version>0.8</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jcl-over-slf4j</artifactId>
-                <version>1.7.26</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>1.2.68.noneautotype</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>20.0</version>
+                <artifactId>initializer-start</artifactId>
+                <version>${revision}</version>
             </dependency>
 
             <!-- support git protocol -->
@@ -85,18 +74,7 @@
                 <version>5.6.0.201912101111-r</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>${mockito-all.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy</artifactId>
-                <version>2.5.8</version>
-            </dependency>
+            <!-- misc -->
             <dependency>
                 <groupId>commons-configuration</groupId>
                 <artifactId>commons-configuration</artifactId>
@@ -117,40 +95,28 @@
                 <artifactId>commons-collections4</artifactId>
                 <version>4.4</version>
             </dependency>
-
             <dependency>
-                <groupId>com.vladsch.flexmark</groupId>
-                <artifactId>flexmark-all</artifactId>
-                <version>0.50.46</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.vladsch.flexmark</groupId>
-                        <artifactId>flexmark-pdf-converter</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>1.7.26</version>
             </dependency>
             <dependency>
-                <groupId>com.auth0</groupId>
-                <artifactId>java-jwt</artifactId>
-                <version>3.4.0</version>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.68.noneautotype</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>20.0</version>
             </dependency>
 
+            <!-- test -->
             <dependency>
-                <groupId>org.springframework.security.extensions</groupId>
-                <artifactId>spring-security-saml2-core</artifactId>
-                <version>1.0.10.RELEASE</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-collections</groupId>
-                        <artifactId>commons-collections</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>com.squareup.okhttp3</groupId>
-                <artifactId>okhttp</artifactId>
-                <version>3.12.12</version>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito-all.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- not exists -->

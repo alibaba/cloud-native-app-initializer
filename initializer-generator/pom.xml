@@ -52,11 +52,6 @@
             <artifactId>initializr-actuator</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>initializer-page</artifactId>
-        </dependency>
-
         <!-- misc -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -126,26 +121,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.3.7.RELEASE</version>
-                <configuration>
-                    <mainClass>com.alibaba.initializer.start.Application</mainClass>
-                    <attach>true</attach>
-                    <classifier>fatjar</classifier>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>repackage</id>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
