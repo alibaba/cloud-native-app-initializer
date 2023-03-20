@@ -39,14 +39,13 @@ export default function useHash() {
   useEffect(() => {
     if (complete && hash) {
       const params = queryString.parse(`?${hash.substr(2)}`)
-      if (window.safemode) {
+      if (params && window.safemode) {
         delete params.artifactId
         delete params.groupId
         delete params.description
         delete params.name
         delete params.packageName
       }
-      console.debug('asdasdasd', window.safemode, params);
       dispatch({ type: 'LOAD', payload: { params, lists: config.lists } })
       clearHash()
       setHash('')
