@@ -34,6 +34,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +56,11 @@ public class ClasspathTemplateLoader implements CodeTemplateRepoLoader {
             URI uri = new URI(uriStr);
 
             Path rootPath = Paths.get(uri.getPath());
+
+            Resource rootResource = resourceLoader.getResource(CLASSPAHT_PREFIX + rootPath);
+            if (!rootResource.exists()) {
+                return new CodeTemplateRepo(uri, Collections.emptyList());
+            }
 
             Resource[] resources = resourceLoader.getResources(CLASSPAHT_PREFIX + rootPath + "/**");
 
