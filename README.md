@@ -16,21 +16,15 @@ Please clone the project locally and make sure you have a Java 17 environment.
 
 ### Build project
 
-Make sure you have python installed on your computer.
-
-In the project root directory, execute the following commands to install `Node` and `Yarn`:
+Since the front end is stored in the form of source code in this project, it needs to be compiled with yarn to become a resource file of the current project in order to be accessed correctly. Execute in the `cloud-native-app-initializer` directory:
 ```shell
-mvn compile -P install-yarn
+mvn clean install
 ```
-In the project root directory, execute the following command to copy the static files to the target of the `initializer-generator` module:
-```shell
-mvn prepare-package
-```
+After this step is executed, compile and build the project module. Among them, the compiled front-end files will be copied to the `initializer-page/target/classes/static` directory
 
 ### Run project
-Enter the `initializer-generator` module and execute the following command to start the application:
+Enter the `initializer-start` module and execute the following command to start the application:
 ```shell
-cd initializer-generator
 mvn spring-boot:run
 ```
 In the browser, enter `http://127.0.0.1:7001/bootstrap.html` to use the initializer project for project bootstrap.
