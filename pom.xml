@@ -5,11 +5,10 @@
     <groupId>com.alibaba</groupId>
     <artifactId>cloud-native-app-initializer</artifactId>
     <packaging>pom</packaging>
-    <version>${revision}</version>
+    <version>0.8</version>
     <name>cloud-native-app-initializer</name>
 
     <properties>
-        <revision>0.8</revision>
         <spring-initializr.version>0.13.0</spring-initializr.version>
 
         <spring-boot.version>2.7.1</spring-boot.version>
@@ -49,17 +48,17 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>initializer-generator</artifactId>
-                <version>${revision}</version>
+                <version>0.8</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>initializer-page</artifactId>
-                <version>${revision}</version>
+                <version>0.8</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>initializer-start</artifactId>
-                <version>${revision}</version>
+                <version>0.8</version>
             </dependency>
 
             <!-- support git protocol -->
