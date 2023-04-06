@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react'
 import {CSSTransition, TransitionGroup} from 'react-transition-group'
 
 import {AppContext} from '../../reducer/App'
-import {IconCaretDown, IconHelp} from '../icons'
+import {IconCaretDown, IconHelp,IconFile} from '../icons'
 import {Switch} from '../form'
 
 const QuickLinks = () => {
@@ -56,6 +56,16 @@ const QuickLinks = () => {
                   <Switch id='theme-switch' isOn={theme === 'dark'} onChange={toggleTheme}/>
                     {theme === 'dark' ? '深色' : '浅色'} 主题
                 </span>
+            </li>
+            <li>
+                <a
+                    href='/ecosystem.html'
+                    tabIndex='-1'
+                    target="_blank"
+                >
+                    <IconFile/>
+                   阿里巴巴微服务生态
+                </a>
             </li>
             <li>
                 <a
