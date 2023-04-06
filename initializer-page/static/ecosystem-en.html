@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -9,21 +9,19 @@
       href="https://g.alicdn.com/mamba/assets/0.0.18/mse-arc-ui.min.css"
     />
     <link rel="shortcut icon" href="/images/aliyun-icon.png"/>
-    <title>阿里巴巴微服务生态</title>
+    <title>Alibaba micro service ecology</title>
   </head>
   <body>
     <script src="//g.alicdn.com/mamba/assets/0.0.18/mse-arc-ui.min.js"></script>
     <section className="msemap-section">
-      <div className="msemap-container" >
         <div style="display: flex; justify-content: center; align-items: center;" >  
-          <h2 style="text-align: center;">微服务生态全景图</h2>
-          <select id="language-selector" onchange="changeLanguage()" style="margin-left:20px;" >
-            <option value="en">En</option>
-            <option value="zh" selected>中</option></option>
-          </select>
-        </div>
+            <h2 style="text-align: center;">Microservice Ecosystem Landscape</h2>
+            <select id="language-selector" onchange="changeLanguage()" style="margin-left:20px;" >
+              <option value="en" selected>En</option>
+              <option value="zh">中</option>
+            </select>
+          </div>
         <div id="mse-arc-container"></div>
-      </div>
     </section>
   </body>
   <script>
@@ -31,8 +29,10 @@
       var lang = document.getElementById("language-selector").value;
       if(lang==='en'){
         window.open('/ecosystem-en.html','_self')
+        lang.value='en'
       }else{
         window.open('/ecosystem.html','_self')
+        lang.value='zh'
       }
     }
     </script>

@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react'
 import {CSSTransition, TransitionGroup} from 'react-transition-group'
 
 import {AppContext} from '../../reducer/App'
-import {IconCaretDown, IconHelp} from '../icons'
+import {IconCaretDown, IconHelp,IconFile} from '../icons'
 import {Switch} from '../form'
 
 const QuickLinks = () => {
@@ -63,6 +63,7 @@ const QuickLinks = () => {
                     tabIndex='-1'
                     target="_blank"
                 >
+                    <IconFile/>
                    阿里巴巴微服务生态
                 </a>
             </li>
