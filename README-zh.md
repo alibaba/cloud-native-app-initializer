@@ -18,16 +18,15 @@
 请在本地 clone 该项目，并确保具备 Java 17 环境。
 
 ### 构建项目
-由于前端是以源码的形式存储与本项目中，需要使用yarn进行编译后，成为当前项目的资源文件，才能被正确访问：
+由于前端是以源码的形式存储与本项目中，需要使用yarn进行编译后，成为当前项目的资源文件，才能被正确访问，在`cloud-native-app-initializer` 目录下执行：
 ```shell
-mvn process-sources
+mvn clean install
 ```
-此步骤执行后，编译后的前端文件，会被复制到 `initializer-page/target/classes/static` 目录下
+此步骤执行后，对项目模块进行编译构建。其中，编译后的前端文件，会被复制到 `initializer-page/target/classes/static` 目录下
 
 ### 启动项目
-进入`initializer-generator` 模块，执行以下命令启动应用：
+进入`initializer-start` 模块，执行以下命令启动应用：
 ```shell
-cd initializer-generator
 mvn spring-boot:run
 ```
 在浏览器中，输入 http://127.0.0.1:7001/bootstrap.html 即可使用脚手架项目进行工程构建。
