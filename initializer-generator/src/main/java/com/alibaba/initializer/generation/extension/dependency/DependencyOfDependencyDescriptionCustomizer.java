@@ -26,6 +26,7 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +49,7 @@ public class DependencyOfDependencyDescriptionCustomizer implements ProjectDescr
 
         DependenciesCapability allDependency = metadata.getDependencies();
 
-        Set<String> ids = description.getRequestedDependencies().keySet();
+        Set<String> ids = new HashSet<>(description.getRequestedDependencies().keySet());
 
         ids.stream().map(allDependency::get).forEach(dep -> this.appendSubDep(dep, description, allDependency));
     }
