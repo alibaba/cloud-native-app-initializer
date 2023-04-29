@@ -16,11 +16,12 @@
 
 package com.alibaba.initializer.metadata;
 
-import java.util.Collections;
-import java.util.List;
-
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.Describable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
@@ -29,9 +30,9 @@ public class Architecture extends DefaultMetadataElement implements Describable 
 
     private String description;
 
-    private List<String> requiredDependency;
+    private List<String> requiredDependency = new ArrayList<>();
 
-    private List<Module> subModules;
+    private List<Module> subModules = new ArrayList<>();
 
     public Architecture() {
     }
