@@ -16,11 +16,8 @@
 
 package com.alibaba.initializer.generation.extension.build.maven;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.alibaba.initializer.generation.condition.ConditionalOnArchitectured;
 import com.alibaba.initializer.generation.condition.ConditionalOnModule;
+import com.alibaba.initializer.generation.extension.build.ModuleDependencyBuildCustormizer;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
@@ -31,13 +28,13 @@ import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
-import io.spring.initializr.generator.spring.build.maven.MavenBuildProjectContributor;
 import io.spring.initializr.generator.spring.util.LambdaSafe;
 import io.spring.initializr.metadata.InitializrMetadata;
-
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
@@ -81,8 +78,13 @@ public class ArchedMavenProjectGenerationConfiguration {
     }
 
     @Bean
+    public ModuleDependencyBuildCustormizer moduleDependencyBuildCustormizer() {
+        return new ModuleDependencyBuildCustormizer();
+    }
+
+    @Bean
     public MulitModuleMavenBuildProjectContributor mulitModuleavenBuildProjectContributor(
-            MavenBuild build, IndentingWriterFactory indentingWriterFactory,InitializrMetadata metadata) {
+            MavenBuild build, IndentingWriterFactory indentingWriterFactory, InitializrMetadata metadata) {
         return new MulitModuleMavenBuildProjectContributor(build, indentingWriterFactory, metadata);
     }
 
